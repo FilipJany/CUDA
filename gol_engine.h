@@ -12,11 +12,27 @@
 #include <stdlib.h>
 
 #define BOARD_TYPE_LENGTH 32
-#define NO_LIFE ' '
-#define LIFE '*'
 
-int **prepareBoard(int width, int height);
+#define LIFE 1
+#define DEAD 0
 
-int **prepareBoardFromSource(int width, int height, FILE src);
+#define DEAD_VISUAL ' '
+#define LIFE_VISUAL '*'
+
+typedef struct {
+    int **board;
+    int width;
+    int height;
+} universe;
+
+universe *prepareUniverse(int width, int height);
+
+universe *prepareUniverseFromSource(int width, int height, FILE src);
+
+void destroyUniverse(universe *u);
+
+int getCell(universe *u, int xCoord, int yCoord);
+
+void setCell(universe *u, int xCoord, int yCoord, int value);
 
 #endif /* defined(____gol_engine__) */

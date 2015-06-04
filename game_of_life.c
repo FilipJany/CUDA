@@ -37,7 +37,12 @@ params parseParams(int argc, char **argv) {
 
 int validateParams(params p) {
     if (p.width % BOARD_TYPE_LENGTH != 0) {
-        printf("[ERROR] Width has to be a multiplication of 32.\n");
+        printf("[ERROR] Width has to be a multiplication of %d.\n", BOARD_TYPE_LENGTH);
+        return 0;
+    }
+
+    if (p.height % BOARD_TYPE_LENGTH != 0) {
+        printf("[ERROR] Height has to be a multiplication of %d.\n", BOARD_TYPE_LENGTH);
         return 0;
     }
 
