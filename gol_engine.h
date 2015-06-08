@@ -27,7 +27,7 @@ typedef struct {
 
 universe *prepareUniverse(int width, int height);
 
-universe *prepareUniverseFromSource(int width, int height, FILE src);
+universe *prepareUniverseFromSource(int width, int height, char *srcName);
 
 void destroyUniverse(universe *u);
 

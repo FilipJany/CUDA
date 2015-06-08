@@ -7,7 +7,7 @@
 
 #include "gol_engine.h"
 
-
+#define FORMAT_LENGTH 10
 
 /* Private auxiliary functions */
 
@@ -24,7 +24,7 @@ int boardAllocationCheck(int **board, int width) {
 
 int **boardAlloc(int width, int height) {
     int **board = malloc(width * sizeof(int *));
-    for (int i = 0; i < width % BOARD_TYPE_LENGTH; ++i)
+    for (int i = 0; i < width; ++i)
         board[i] = calloc(height / BOARD_TYPE_LENGTH, sizeof(int));
 
     if (!boardAllocationCheck(board, width))
@@ -60,8 +60,21 @@ void boardRandom(universe *u, long seed) {
     }
 }
 
-void boardLoadFromFile(universe *u, FILE src) {
-    //TODO
+void boardLoadFromFile(universe *u, char *srcName) {
+    FILE *src = fopen(srcName, "r");
+
+    char format[FORMAT_LENGTH];
+    char line[u->width+1];
+    sprintf(format, "%%%ds", u->width);
+
+    for (int j = 0; j < u->height; ++j) {
+        fscanf(src, format, line);
+
+        for (int i = 0; i < u->width; ++i)
+            setCell(u, i, j, line[i] == DEAD_VISUAL ? DEAD : LIFE)
+    }
+
+    fclose(src);
 }
 
 int validateValue(int value) {
@@ -79,9 +92,9 @@ universe *prepareUniverse(int width, int height) {
     return u;
 }
 
-universe *prepareUniverseFromSource(int width, int height, FILE src) {
+universe *prepareUniverseFromSource(int width, int height, char *srcName) {
     universe *u = makeUniverse(width, height);
-    boardLoadFromFile(u, src);
+    boardLoadFromFile(u, srcName);
 
     return u;
 }
