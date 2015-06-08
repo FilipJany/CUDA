@@ -9,7 +9,7 @@
 
 #define FORMAT_LENGTH 10
 
-/* Private auxiliary functions */
+//------- Private auxiliary functions -------//
 
 int boardAllocationCheck(int **board, int width) {
     if (board == NULL)
@@ -83,7 +83,7 @@ int validateValue(int value) {
 
 
 
-/* Init/Dealloc functions */
+//------- Init/Dealloc functions -------//
 
 universe *prepareUniverse(int width, int height) {
     universe *u = makeUniverse(width, height);
@@ -110,7 +110,7 @@ void destroyUniverse(universe *u) { //More epic function than 'freeBoard/1'
 
 
 
-/* Fields navigation */
+//------- Fields navigation -------//
 
 int getCell(universe *u, int xCoord, int yCoord) {
     int x = xCoord % u->width;
@@ -130,4 +130,20 @@ void setCell(universe *u, int xCoord, int yCoord, int value) {
     //C is beautiful, hacker-friendly language, I love it! I'll call it Stopyra's switch :)
     u->board[x][y] |= (value << yCoord % BOARD_TYPE_LENGTH);
     u->board[x][y] &= 0xffffffff & (value << yCoord % BOARD_TYPE_LENGTH);
+}
+
+
+
+//------- Output saving -------//
+
+void saveToFile(universe *u, char *outName) {
+    FILE *out = fopen(outName, "w");
+
+    for (int j = 0; j < u->height; ++j) {
+        for (int i = 0; i < u->width; ++i)
+            fprintf(out, "%c", getCell(u, i, j) == LIFE ? LIFE_VISUAL : DEAD_VISUAL);
+        fprintf(out, "\n");
+    }
+    
+    fclose(out);
 }

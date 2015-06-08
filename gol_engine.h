@@ -29,6 +29,8 @@ universe *prepareUniverse(int width, int height);
 
 universe *prepareUniverseFromSource(int width, int height, char *srcName);
 
+void saveToFile(universe *u, char *outName);
+
 void destroyUniverse(universe *u);
 
 int getCell(universe *u, int xCoord, int yCoord);
