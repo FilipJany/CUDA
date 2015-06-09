@@ -64,14 +64,14 @@ void boardLoadFromFile(universe *u, char *srcName) {
     FILE *src = fopen(srcName, "r");
 
     char format[FORMAT_LENGTH];
-    char line[u->width+1];
+	char* line = (char*)malloc(sizeof(char) * (u->width + 1));
     sprintf(format, "%%%ds", u->width);
 
     for (int j = 0; j < u->height; ++j) {
         fscanf(src, format, line);
 
-        for (int i = 0; i < u->width; ++i)
-            setCell(u, i, j, line[i] == DEAD_VISUAL ? DEAD : LIFE)
+		for (int i = 0; i < u->width; ++i)
+			setCell(u, i, j, line[i] == DEAD_VISUAL ? DEAD : LIFE);
     }
 
     fclose(src);
