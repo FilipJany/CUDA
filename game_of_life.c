@@ -70,7 +70,8 @@ int main(int argc, char **argv) {
         return 2;
 
 
-    printf("%d %d %d %d %s\n", p.width, p.height, p.startTry, p.endTry, p.path);
+    printf("--- %d\n", -5 % 3);
+    //printf("%d %d %d %d %s\n", p.width, p.height, p.startTry, p.endTry, p.path);
 
     return 0;
 }

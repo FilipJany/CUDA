@@ -71,7 +71,7 @@ void boardLoadFromFile(universe *u, char *srcName) {
         fscanf(src, format, line);
 
         for (int i = 0; i < u->width; ++i)
-            setCell(u, i, j, line[i] == DEAD_VISUAL ? DEAD : LIFE)
+            setCell(u, i, j, line[i] == DEAD_VISUAL ? DEAD : LIFE);
     }
 
     fclose(src);

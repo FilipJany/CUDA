@@ -1,23 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "gol_engine.h"
 #include "nvidia_engine.h"
 
+static int width;
+static int height;
+
+
+//------ Some computational functions ------//
+
+int mod(int number, int modulus) {
+    return abs(number % modulus);
+}
 
 __global__ void computeNextStep(int* board_d)
 {
 	//do the magic
 }
 
-__global__ int* getMooreNeighborhood(int* board_d, int cell)
+__global__ int* getMooreNeighborhood(int* board_d)
 {
-	//do the other magic 
+    int numNbrs = 0;
+
+    int x = (numer porzadkowy wierzcholka) / (height * BOARD_TYPE_LENGTH);
+    int y = ((numer porzadkowy wierzcholka) - x * (height * BOARD_TYPE_LENGTH));
+
+
 }
+
+
+
+//------- Array copying ------//
 
 int* copyArrayToDevice(universe uni)
 {
-	int width = uni.width; //number of int's in array -> width
 	int* board_d;
 	cudaMalloc((void**)&board_d, uni.height*uni.width/sizeof(int));
 	
@@ -25,6 +43,9 @@ int* copyArrayToDevice(universe uni)
 	{
 		cudaMemcpy(board_d+i*height/BOARD_TYPE_LENGTH, uni.board[i], uni.height/BOARD_TYPE_LENGTH, cudaMemcpyHostToDevice);
 	}
+    width = uni.width;
+    height = uni.height;
+
 	return board_d;
 }
 
