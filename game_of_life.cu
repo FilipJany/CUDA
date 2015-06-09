@@ -31,7 +31,7 @@ params parseParams(int argc, char **argv) {
     sscanf(argv[3], "%d", &(p.startTry));
     sscanf(argv[4], "%d", &(p.endTry));
 
-    p.path = malloc((strlen(argv[5])+1) * sizeof(char));
+    p.path = (char*) malloc((strlen(argv[5])+1) * sizeof(char));
     strncpy(p.path, argv[5], strlen(argv[5]));
 
     return p;
@@ -70,8 +70,8 @@ int main(int argc, char **argv) {
     params p = parseParams(argc, argv);
     if (!validateParams(p))
         return 2;
-	universe uni = prepareUniverse(p.width, p.height);
-	copyArrayToDevice(uni);
+	universe *uni = prepareUniverse(p.width, p.height);
+	copyArrayToDevice(*uni);
     //printf("--- %d\n", -5 % 3);
     //printf("%d %d %d %d %s\n", p.width, p.height, p.startTry, p.endTry, p.path);
 

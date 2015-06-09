@@ -23,9 +23,9 @@ int boardAllocationCheck(int **board, int width) {
 }
 
 int **boardAlloc(int width, int height) {
-    int **board = malloc(width * sizeof(int *));
+    int **board =(int**) malloc(width * sizeof(int *));
     for (int i = 0; i < width; ++i)
-        board[i] = calloc(height / BOARD_TYPE_LENGTH, sizeof(int));
+        board[i] = (int*)calloc(height / BOARD_TYPE_LENGTH, sizeof(int));
 
     if (!boardAllocationCheck(board, width))
         return NULL;
@@ -34,7 +34,7 @@ int **boardAlloc(int width, int height) {
 }
 
 universe *makeUniverse(int width, int height) {
-    universe *u = malloc(sizeof(universe)); //Alloc space with size of our universe :)
+    universe *u = (universe*)malloc(sizeof(universe)); //Alloc space with size of our universe :)
 
     u->board = boardAlloc(width, height);
 
