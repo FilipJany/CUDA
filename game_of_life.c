@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "gol_engine.h"
+#include "nvidia_engine.h"
 
 #define PARAMS_NUMBER 6
 
