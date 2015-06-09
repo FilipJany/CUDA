@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <cuda.h>
 #include "gol_engine.h"
 #include "nvidia_engine.h"
 
@@ -69,9 +70,9 @@ int main(int argc, char **argv) {
     params p = parseParams(argc, argv);
     if (!validateParams(p))
         return 2;
-
-
-    printf("--- %d\n", -5 % 3);
+	universe uni = prepareUniverse(p.width, p.height);
+	copyArrayToDevice(uni);
+    //printf("--- %d\n", -5 % 3);
     //printf("%d %d %d %d %s\n", p.width, p.height, p.startTry, p.endTry, p.path);
 
     return 0;
