@@ -7,6 +7,16 @@
 #include "nvidia_engine.h"
 
 
+static int width;
+static int height;
+
+
+//------ Some computational functions ------//
+
+int mod(int number, int modulus) {
+	return abs(number % modulus);
+}
+
 void computeNextStep(int* board_d)
 {
 	//do the magic
@@ -32,6 +42,8 @@ int* copyArrayToDevice(universe uni)
 	{
 		cudaMemcpy(board_d+i*uni.height/BOARD_TYPE_LENGTH, uni.board[i], uni.height/BOARD_TYPE_LENGTH, cudaMemcpyHostToDevice);
 	}
+	width = uni.width;
+	height = uni.height;
 	return board_d;
 }
 
