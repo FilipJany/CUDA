@@ -71,7 +71,8 @@ int main(int argc, char **argv) {
     if (!validateParams(p))
         return 2;
 	universe *uni = prepareUniverse(p.width, p.height);
-	copyArrayToDevice(*uni);
+	world* w = copyArrayToDevice(*uni);
+	computeNextStep << <1, 1 >> > (w);
     //printf("--- %d\n", -5 % 3);
     //printf("%d %d %d %d %s\n", p.width, p.height, p.startTry, p.endTry, p.path);
 

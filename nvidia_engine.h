@@ -3,10 +3,17 @@
 
 #include <cuda.h>
 
-__global__ void computeNextStep(int* board_d);
+typedef struct
+{
+	int* tab_0;
+	int* tab_1;
+	int actual; //0 if tab_1, 1 if tab_2
+}world;
+
+__global__ void computeNextStep(world* w);
 int getMooreNeighborhood(int* board_d, int hi, int wid);
 
-int* copyArrayToDevice(universe uni);
-void copyArrayToHost(int* board_d, universe uni);
+world* copyArrayToDevice(universe uni);
+void copyArrayToHost(world* w, universe* uni);
 
 #endif
