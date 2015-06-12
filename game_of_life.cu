@@ -20,6 +20,8 @@ typedef struct {
     int startTry;
     int endTry;
     char *path;
+	int pathlen;
+	char *src;
 } params;
 
 params parseParams(int argc, char **argv) {
@@ -31,9 +33,18 @@ params parseParams(int argc, char **argv) {
     sscanf(argv[3], "%d", &(p.startTry));
     sscanf(argv[4], "%d", &(p.endTry));
 
-    p.path = (char*) malloc((strlen(argv[5])+1) * sizeof(char));
+    p.path = (char*) malloc((strlen(argv[5])+16) * sizeof(char));
     strncpy(p.path, argv[5], strlen(argv[5]));
 
+	p.pathlen = strlen(p.path);
+
+	if(argc > 6)
+	{
+		p.src = (char*) malloc((strlen(argv[6])+1) * sizeof(char));
+		strncpy(p.src, argv[6], strlen(argv[6]));
+	}	
+	else
+		p.src = NULL;
     return p;
 }
 
@@ -62,7 +73,7 @@ void userInfo() {
 }
 
 int main(int argc, char **argv) {
-    if (argc != PARAMS_NUMBER) {
+    if (argc < PARAMS_NUMBER) {
         userInfo();
         return 1;
     }
@@ -70,11 +81,30 @@ int main(int argc, char **argv) {
     params p = parseParams(argc, argv);
     if (!validateParams(p))
         return 2;
-	universe *uni = prepareUniverse(p.width, p.height);
+	universe *uni;// = prepareUniverse(p.width, p.height);
+	if(argc == 7)
+		uni = prepareUniverseFromSource(p.width, p.height, p.src);
+	else
+		uni = prepareUniverse(p.width, p.height);
+
 	world* w = copyArrayToDevice(*uni);
-	computeNextStep << <1, 1 >> > (w);
+	
+	for(int i = 0; i <= p.endTry; ++i)
+	{
+		if(i >= p.startTry)
+		{
+			copyArrayToHost(w, uni);
+			//char* currentName = malloc(sizeof(char)
+			//sprintf()
+			sprintf(p.path + p.pathlen, "_%d.txt", i);
+			saveToFile(uni, p.path);
+		}
+		computeNextStep<<<32,1>>>(w);
+		w->actual = !w->actual;
+	}
     //printf("--- %d\n", -5 % 3);
     //printf("%d %d %d %d %s\n", p.width, p.height, p.startTry, p.endTry, p.path);
-
+	destroyUniverse(uni);
+	free(w);
     return 0;
 }

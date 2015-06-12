@@ -62,19 +62,19 @@ void boardRandom(universe *u, long seed) {
 
 void boardLoadFromFile(universe *u, char *srcName) {
     FILE *src = fopen(srcName, "r");
-
-    char format[FORMAT_LENGTH];
-	char* line = (char*)malloc(sizeof(char) * (u->width + 1));
-    sprintf(format, "%%%ds", u->width);
-
-    for (int j = 0; j < u->height; ++j) {
-        fscanf(src, format, line);
+	char format[FORMAT_LENGTH];
+	char* line = (char*)malloc(sizeof(char) * (u->width + 2));
+    sprintf(format, "%%%ds", u->width+1);
+	
+	for (int j = 0; j < u->height / BOARD_TYPE_LENGTH; ++j) {
+		fscanf(src, format, line);
 
 		for (int i = 0; i < u->width; ++i)
+		{
 			setCell(u, i, j, line[i] == DEAD_VISUAL ? DEAD : LIFE);
+		}
     }
-
-    fclose(src);
+	fclose(src);
 }
 
 int validateValue(int value) {
@@ -138,7 +138,7 @@ void setCell(universe *u, int xCoord, int yCoord, int value) {
 
 void saveToFile(universe *u, char *outName) {
     FILE *out = fopen(outName, "w");
-
+	printf("%s\n", outName);
     for (int j = 0; j < u->height; ++j) {
         for (int i = 0; i < u->width; ++i)
             fprintf(out, "%c", getCell(u, i, j) == LIFE ? LIFE_VISUAL : DEAD_VISUAL);
