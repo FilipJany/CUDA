@@ -86,25 +86,29 @@ int main(int argc, char **argv) {
 		uni = prepareUniverseFromSource(p.width, p.height, p.src);
 	else
 		uni = prepareUniverse(p.width, p.height);
-
-	world* w = copyArrayToDevice(*uni);
 	
+	int* tab_0;
+	int* tab_1;
+	cudaMalloc(&(tab_0), uni->height*uni->width / sizeof(int));
+	cudaMalloc(&(tab_1), uni->height*uni->width / sizeof(int));
+	copyArrayToDevice(*uni, tab_0);
+	int actual = 0;
 	for(int i = 0; i <= p.endTry; ++i)
 	{
 		if(i >= p.startTry)
 		{
-			copyArrayToHost(w, uni);
+			copyArrayToHost(uni, tab_0, tab_1, actual);
 			//char* currentName = malloc(sizeof(char)
 			//sprintf()
 			sprintf(p.path + p.pathlen, "_%d.txt", i);
 			saveToFile(uni, p.path);
 		}
-		computeNextStep<<<32,1>>>(w);
-		w->actual = !w->actual;
+		computeNextStep<<<32,1>>>(tab_0, tab_1, actual);
+		cudaDeviceSynchronize();
+		actual = !actual;
 	}
     //printf("--- %d\n", -5 % 3);
     //printf("%d %d %d %d %s\n", p.width, p.height, p.startTry, p.endTry, p.path);
 	destroyUniverse(uni);
-	free(w);
     return 0;
 }

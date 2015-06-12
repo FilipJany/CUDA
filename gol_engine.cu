@@ -64,16 +64,19 @@ void boardLoadFromFile(universe *u, char *srcName) {
     FILE *src = fopen(srcName, "r");
 	char format[FORMAT_LENGTH];
 	char* line = (char*)malloc(sizeof(char) * (u->width + 2));
-    sprintf(format, "%%%ds", u->width+1);
+    sprintf(format, "%%%dc", u->width+1);
 	
-	for (int j = 0; j < u->height / BOARD_TYPE_LENGTH; ++j) {
+	for (int j = 0; j < u->height; ++j) {
 		fscanf(src, format, line);
-
 		for (int i = 0; i < u->width; ++i)
 		{
 			setCell(u, i, j, line[i] == DEAD_VISUAL ? DEAD : LIFE);
 		}
     }
+	//for (int i = 0; i < u->width; ++i)
+	//{
+	//	printf("ub[%d] - t[%d]\n", u->board[i][0], i);
+	//}
 	fclose(src);
 }
 
@@ -127,9 +130,12 @@ void setCell(universe *u, int xCoord, int yCoord, int value) {
     int y = (yCoord % u->height) / BOARD_TYPE_LENGTH;
     value = validateValue(value);
 
-    //C is beautiful, hacker-friendly language, I love it! I'll call it Stopyra's switch :)
+	//C is beautiful, hacker-friendly language, I love it! I'll call it Stopyra's switch :)
     u->board[x][y] |= (value << yCoord % BOARD_TYPE_LENGTH);
-    u->board[x][y] &= 0xffffffff & (value << yCoord % BOARD_TYPE_LENGTH);
+	int haxxx = (0xffffffff << 1) | value;
+	for (int i = 0; i < yCoord % BOARD_TYPE_LENGTH; ++i)
+		haxxx = (haxxx << 1) | 1;
+    u->board[x][y] &= haxxx;
 }
 
 
@@ -144,6 +150,11 @@ void saveToFile(universe *u, char *outName) {
             fprintf(out, "%c", getCell(u, i, j) == LIFE ? LIFE_VISUAL : DEAD_VISUAL);
         fprintf(out, "\n");
     }
-    
+
+	for (int j = 0; j < u->height; ++j) 
+	{
+		printf("%d\n", u->board[j][0]);
+		}
+
     fclose(out);
 }
