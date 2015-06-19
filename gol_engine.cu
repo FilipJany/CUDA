@@ -151,10 +151,5 @@ void saveToFile(universe *u, char *outName) {
         fprintf(out, "\n");
     }
 
-	for (int j = 0; j < u->height; ++j) 
-	{
-		printf("%d\n", u->board[j][0]);
-		}
-
     fclose(out);
 }

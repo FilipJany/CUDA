@@ -11,6 +11,7 @@
 #include <cuda.h>
 #include "gol_engine.h"
 #include "nvidia_engine.h"
+#include <time.h>
 
 #define PARAMS_NUMBER 6
 
@@ -93,22 +94,27 @@ int main(int argc, char **argv) {
 	cudaMalloc(&(tab_1), uni->height*uni->width / sizeof(int));
 	copyArrayToDevice(*uni, tab_0);
 	int actual = 0;
+	clock_t begin, end;
+	double time_spent;
+
+	begin = clock();
+
 	for(int i = 0; i <= p.endTry; ++i)
 	{
 		if(i >= p.startTry)
 		{
 			copyArrayToHost(uni, tab_0, tab_1, actual);
-			//char* currentName = malloc(sizeof(char)
-			//sprintf()
 			sprintf(p.path + p.pathlen, "_%d.txt", i);
 			saveToFile(uni, p.path);
 		}
+		//computeNextStepSharedMemory<<<512, 32, uni->width * (uni->height / BOARD_TYPE_LENGTH)>>>(tab_0, tab_1, actual);
 		computeNextStep<<<32,1>>>(tab_0, tab_1, actual);
 		cudaDeviceSynchronize();
 		actual = !actual;
 	}
-    //printf("--- %d\n", -5 % 3);
-    //printf("%d %d %d %d %s\n", p.width, p.height, p.startTry, p.endTry, p.path);
-	destroyUniverse(uni);
+	end = clock();
+	time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("Time spent: %lf.\n", time_spent);
+    destroyUniverse(uni);
     return 0;
 }
